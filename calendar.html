@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" >
+	<title>Calendar Design By Win7</title>
+	<script type="text/javascript" src="calender.js"></script>
+	<style>
+	body, ul, li, p{margin: 0;padding: 0;font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif}
+	button{border: none;background: none;height: 40px;padding: 0;}
+	/*方便修改*/
+	.setWidth {width: 588px;}
+	.setBColor{background-color: #008B45;}
+	.setFColor{color: #fff;}
+	.cal_list,#calender ul {width: 413px;font-size: 0;}
+	#calender li {width: 57px; line-height: 57px;border-left: 2px solid #000;border-top: 2px solid #000;display:inline-block; *display:block; *zoom:1;}
+	.cal_body{height:413px;position: relative;border-bottom: 2px solid #000;}
+	.cal_detail{position: absolute;right: 0;top: 0;}
+	.cal_detail > div {width: 171px; height: 205px;border-right: 2px solid #000; border-left: 2px solid #000;border-top:2px solid #000;}
+
+	.cal_head{position: relative;}
+	.cal_last_m_btn,.cal_next_m_btn{position: absolute;width: 40px;}
+	.cal_next_m_btn{right: 0;}
+	.cal_current_date{width: 100px;margin: 0 240px;}
+	.cal_foot p{font-size: 14px; text-align: center;line-height: 40px;}
+
+	.cal_weekday,.cal_line,.cal_festival{text-align: center;vertical-align: middle;}
+	.cal_weekday li{font-size: 25px; font-weight: 900;}
+	.cal_line li {font-size: 16px;font-weight: normal;}
+
+	.cal_detail_date{text-align: center;margin-top: 15px;}
+	.cal_day{width: 80px;font-size: 40px;font-weight: 900;margin: 15px auto;filter: progid:DXImageTransform.Microsoft.Shadow(color='#000', Direction=135, Strength=4);/*for ie6,7,8*/-moz-box-shadow:2px 2px 2px #000;/*firefox*/ 
+-webkit-box-shadow:2px 2px 2px #000;/*webkit*/box-shadow: 2px 2px 2px #000;/*opera或ie9*/}
+	.cal_day p{line-height: 80px;text-align: center;}
+	.cal_festival{display: none;}
+
+	/*.cal_body{width: 580px;position: relative;}
+	.cal_list{width: 406px; height: 406px;}
+	.cal_list ul{width: 406px; height: 58px;font-size: 0;}
+	.cal_list ul li{display:inline-block;*display:inline; *zoom:1;font-size:16px;width: 57px; height: 57px;border-left: 1px solid #000;border-bottom: 1px solid #000;}
+	.cal_detail{width: 174px;position: absolute;right: 0;top: 0;}
+	.cal_nation_detail,.cal_lunar_detail{width: 172px; height: 202px;border-left: 1px solid #000;border-right: 1px solid #000;}
+	.cal_lunar_detail{border-top: 1px solid #000;}
+	.cal_foot{width: 578px;border: 1px solid #000;}*/
+	</style>
+</head>
+<body>
+
+	<div id="calender">
+		<div class = "cal_head setBColor setWidth">
+			<button class="cal_last_m_btn setFColor">&lt;</button>
+			<button class="cal_next_m_btn setFColor">&gt;</button>
+			<button class="cal_current_date setFColor">1990年01月</button>
+		</div>
+		<div class="cal_body setWidth">
+			<div class="cal_list">
+				<ul class="cal_weekday">
+					<li>一</li>
+					<li>二</li>
+					<li>三</li>
+					<li>四</li>
+					<li>五</li>
+					<li>六</li>
+					<li>日</li>
+				</ul>
+				<ul class="cal_line"></ul>
+				<ul class="cal_line"></ul>
+				<ul class="cal_line"></ul>
+				<ul class="cal_line"></ul>
+				<ul class="cal_line"></ul>
+				<ul class="cal_line"></ul>
+			</div>
+			<div class="cal_detail">
+				<div class="cal_nation_detail">
+					<p class="cal_detail_date">1990年1月1日</p>
+					<div class="cal_day setBColor">
+						<p class="cal_detail_date_day setFColor">15</p>
+					</div>
+					<p class="cal_weekday">星期一</p>
+					<p class="cal_festival">教师节</p>
+				</div>
+				<div class="cal_lunar_detail">
+					<p>农历三月初九</p>
+					<p>丙申年壬辰月丁卯日</p>
+				</div>
+			</div>
+			
+		</div>
+		<div class="cal_foot setWidth setBColor setFColor">
+			<p>北京时间：00:00:00</p>
+		</div>
+	</div>
+	<script>
+	var calender = new Calender("calender");
+	</script>
+</body>
+</html>
