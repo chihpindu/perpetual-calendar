@@ -1,0 +1,33 @@
+body, ul, li, p{margin: 0;padding: 0;font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif}
+button{border: none;background: none;height: 40px;padding: 0;}
+/*方便修改*/
+.setWidth {width: 588px;}
+.setBColor{background-color: #008B45;}
+.setFColor{color: #fff;}
+.cal_list,#calender ul {width: 413px;font-size: 0;}
+#calender li {width: 57px; line-height: 57px;border-left: 2px solid #000;border-top: 2px solid #000;display:inline-block; *display:block; *zoom:1;}
+.cal_body{height:413px;position: relative;border-bottom: 2px solid #000;}
+.cal_detail{position: absolute;right: 0;top: 0;}
+.cal_detail > div {width: 171px; height: 205px;border-right: 2px solid #000; border-left: 2px solid #000;border-top:2px solid #000;}
+
+.cal_head{position: relative;height: 40px;}
+.cal_last_mm_btn,.cal_next_mm_btn{position: absolute;width: 40px;}
+.cal_next_mm_btn{right: 0;}
+
+.cal_current_date{width: 250px;margin: 0px 169px;position:absolute;top:10px;text-align: center;}
+.cal_current_date_year, .cal_current_date_month{font-size: 0;display: inline-block; *display: block; *zoom: 1;top:0px;}
+.cal_current_date_year button, .cal_current_date_month button {width:18px;height: 18px;border:1px solid #aaa;background-color: #eee;color: #aaa;}
+
+
+.cal_foot p{font-size: 14px; text-align: center;line-height: 40px;}
+
+.cal_weekday,.cal_line,.cal_festival{text-align: center;vertical-align: middle;}
+.cal_weekday li{font-size: 25px; font-weight: 900;}
+.cal_line li {font-size: 16px;font-weight: normal;}
+
+.cal_detail_date{text-align: center;margin-top: 15px;}
+.cal_day{width: 80px;font-size: 40px;font-weight: 900;margin: 15px auto;filter: progid:DXImageTransform.Microsoft.Shadow(color='#000', Direction=135, Strength=4);/*for ie6,7,8*/-moz-box-shadow:2px 2px 2px #000;/*firefox*/ 
+-webkit-box-shadow:2px 2px 2px #000;/*webkit*/box-shadow: 2px 2px 2px #000;/*opera或ie9*/}
+.cal_day p{line-height: 80px;text-align: center;}
+
+.cal_lunar_detail p{margin-top: 10px;text-align: center;}
