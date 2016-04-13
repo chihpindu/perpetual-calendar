@@ -84,29 +84,31 @@
 				this.calFoot = temp;
 			}
 		}
+		this.select = new Date();
+		this.selectY = document.getElementsByName("cal_head_sel_year")[0];
+		this.selectM = document.getElementsByName("cal_head_sel_month")[0];
 		this.ulList = this.calBody.getElementsByTagName("ul");//cal_head_list
 		this.calDetailNation = getelementsbyclassname(this.calBody, "cal_body_n_detail")[0];
 		this.calDetailLunar = getelementsbyclassname(this.calBody, "cal_body_l_detail")[0];
-		this.lastBtn = getelementsbyclassname(this.calHead, "cal_head_lbtn")[0];
-		this.nextBtn = getelementsbyclassname(this.calHead, "cal_head_nbtn")[0];
-		this.lastMBtn = getelementsbyclassname(this.calHead, "cal_head_m_lbtn")[0];
-		this.nextMBtn = getelementsbyclassname(this.calHead, "cal_head_m_nbtn")[0];
-		this.lastYBtn = getelementsbyclassname(this.calHead, "cal_head_y_lbtn")[0];
-		this.nextYBtn = getelementsbyclassname(this.calHead, "cal_head_y_nbtn")[0];
-		this.selectY = document.getElementsByName("cal_head_sel_year")[0];
-		this.selectM = document.getElementsByName("cal_head_sel_month")[0];
-		this.select = new Date();
-		
+		this.cal_body_ndetail_date = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_date")[0];
+		this.cal_body_ndetail_day_p = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_day_p")[0]
+		this.cal_body_ndetail_weekday = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_weekday")[0];
+		this.cal_body_ndetail_festival = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_festival")[0];
+		this.cal_body_ldetail_date = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_date")[0];
+		this.cal_body_ldetail_year = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_year")[0];
+		this.cal_body_ldetail_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_solar_term")[0];
+
 		this.initialize();
 		this.setBColor();
-		this.lastBtn.onclick = function() {_s_.switchLNMPage("last");_s_.changePage();};
-		this.nextBtn.onclick = function() {_s_.switchLNMPage("next");_s_.changePage();};
-		this.lastMBtn.onclick = function() {_s_.switchLNMPage("last");_s_.changePage();};
-		this.nextMBtn.onclick = function() {_s_.switchLNMPage("next");_s_.changePage();};
-		this.lastYBtn.onclick = function() {_s_.switchLNYPage("last");_s_.changePage();};
-		this.nextYBtn.onclick = function() {_s_.switchLNYPage("next");_s_.changePage();};
-		this.selectM.onchange = function() {_s_.changePage();};
+		/*为日历上的按钮添加点击事件*/
+		getelementsbyclassname(this.calHead, "cal_head_lbtn")[0].onclick = function() {_s_.switchLNMPage("last");_s_.changePage();};
+		getelementsbyclassname(this.calHead, "cal_head_nbtn")[0].onclick = function() {_s_.switchLNMPage("next");_s_.changePage();};
+		getelementsbyclassname(this.calHead, "cal_head_m_lbtn")[0].onclick = function() {_s_.switchLNMPage("last");_s_.changePage();};
+		getelementsbyclassname(this.calHead, "cal_head_m_nbtn")[0].onclick = function() {_s_.switchLNMPage("next");_s_.changePage();};
+		getelementsbyclassname(this.calHead, "cal_head_y_lbtn")[0].onclick = function() {_s_.switchLNYPage("last");_s_.changePage();};
+		getelementsbyclassname(this.calHead, "cal_head_y_nbtn")[0].onclick = function() {_s_.switchLNYPage("next");_s_.changePage();};
 		this.selectY.onchange = function() {_s_.changePage();};
+		this.selectM.onchange = function() {_s_.changePage();};
 		var lis = this.ulList.item(1).getElementsByTagName("li");
 		for (i = 0, l = lis.length; i < l; i++) {
 			lis[i].onclick = function() {
@@ -132,12 +134,6 @@
 
 			/*--------------cal_body----------------*/
 			var dateArr = curArray(new Date());
-			/*for (var i = 1, count = 0, l = this.ulList.length; i < l; i++) {
-				for (var j = 0; j < 7; j++) {
-					addLi(this.ulList.item(i), dateArr[count]);
-					count++;
-				}
-			}*/
 			for (var count = 0; count < dateArr.length; count++) {
 				addLi(this.ulList.item(1), dateArr[count]);
 			}
@@ -146,23 +142,16 @@
 
 			/*------------ cal_body_detail----------------*/
 			/*----------cal_detail_nation------------*/
-			var cal_body_ndetail_date = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_date")[0];
-			var cal_body_ndetail_day_p = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_day_p")[0]
-			var cal_body_ndetail_weekday = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_weekday")[0];
-			var cal_detail_festival = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_festival")[0];
-			cal_body_ndetail_date.innerHTML = format(current, "YYYY年MM月DD日");
-			cal_body_ndetail_day_p.innerHTML = current.getDate();
-			cal_body_ndetail_weekday.innerHTML = week_day[current.getDay()];
-			cal_detail_festival.innerHTML = nationFestival(current);
+			this.cal_body_ndetail_date.innerHTML = format(current, "YYYY年MM月DD日");
+			this.cal_body_ndetail_day_p.innerHTML = current.getDate();
+			this.cal_body_ndetail_weekday.innerHTML = week_day[current.getDay()];
+			this.cal_body_ndetail_festival.innerHTML = nationFestival(current);
 
 			/*----------cal_detail_lunar------------*/
-			var cal_body_ldetail_date = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_date")[0];
 			var lunarInfo = lunarDate(new Date());
-			cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
-			var cal_body_ldetail_year = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_year")[0];
-			cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
-			var cal_body_ldetail_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_solar_term")[0];
-			cal_body_ldetail_solar_term.innerHTML = solarTerm(new Date());
+			this.cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
+			this.cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
+			this.cal_body_ldetail_solar_term.innerHTML = solarTerm(new Date());
 
 			/*--------------cal_foot----------------*/
 			var foot_cur_date = this.calFoot.getElementsByTagName("p")[0];
@@ -236,14 +225,6 @@
 
 			/*--------------cal_body----------------*/
 			var dateArr = curArray(new Date(head_cur_date_year,head_cur_date_month-1,1));
-			/*var li;
-			for (var i = 1, count = 0, l = this.ulList.length; i < l; i++) {
-				li = this.ulList.item(i).getElementsByTagName("li");
-				for (var j = 0; j < 7; j++) {
-					changeLi(li[j], dateArr[count]);
-					count++;
-				}
-			}*/
 			var li = this.ulList.item(1).getElementsByTagName("li");
 			for (var count = 0; count < dateArr.length; count++) {
 				changeLi(li[count], dateArr[count]);
@@ -260,24 +241,16 @@
 			changeLiColorCur(this.ulList,this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate(),this.setting.color);
 			/*------------ cal_detail----------------*/
 			/*----------cal_detail_nation------------*/
-			var cal_body_ndetail_date = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_date")[0];
-			var cal_body_ndetail_day_p = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_day_p")[0]
-			var cal_body_ndetail_weekday = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_weekday")[0];
-			var cal_detail_festival = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_festival")[0];
-			cal_body_ndetail_date.innerHTML = format(this.select, "YYYY年MM月DD日");
-			cal_body_ndetail_day_p.innerHTML = this.select.getDate();
-			cal_body_ndetail_weekday.innerHTML = week_day[this.select.getDay()];
-			cal_detail_festival.innerHTML = nationFestival(this.select);
+			this.cal_body_ndetail_date.innerHTML = format(this.select, "YYYY年MM月DD日");
+			this.cal_body_ndetail_day_p.innerHTML = this.select.getDate();
+			this.cal_body_ndetail_weekday.innerHTML = week_day[this.select.getDay()];
+			this.cal_body_ndetail_festival.innerHTML = nationFestival(this.select);
 
 			/*----------cal_detail_lunar------------*/
-			var cal_body_ldetail_date = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_date")[0];
 			var lunarInfo = lunarDate(new Date(this.select.getFullYear(),this.select.getMonth(),this.select.getDate()));
-			cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
-			var cal_body_ldetail_year = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_year")[0];
-			cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
-			var cal_body_ldetail_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_solar_term")[0];
-			cal_body_ldetail_solar_term.innerHTML = solarTerm(this.select);
-
+			this.cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
+			this.cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
+			this.cal_body_ldetail_solar_term.innerHTML = solarTerm(this.select);
 		}
 	}
 
@@ -333,7 +306,7 @@
 			arr.push(i);
 		}
 		i = 1;
-		while (arr.length != 49) {
+		while (arr.length != 42) {
 			arr.push(i++);
 		}
 		return arr;
@@ -351,21 +324,6 @@
 	}
 
 	function changeLiColor(ul) {
-		/*var color = 0, last = 2;
-		for (i = 1; i < 7; i++) {
-			var li = ul.item(i).getElementsByTagName("li");
-			for (j = 0; j < 7; j++) {
-				if (parseInt(li[j].innerHTML) < last) color = !color; 
-				if (!color) {
-					li[j].style.backgroundColor = "";
-					li[j].style.color = "#999";
-				} else {
-					li[j].style.backgroundColor = "";
-					li[j].style.color = "#000";
-				}
-				last = parseInt(li[j].innerHTML);
-			}
-		}*/
 		var color = 0, last = 2;
 		var li = ul.item(1).getElementsByTagName("li");
 		for (var i = 0; i < li.length; i++) {
@@ -383,16 +341,6 @@
 
 	function changeLiColorCurOri(ul, selectY, selectM, y, m, d) {
 		if (selectY.value == y && selectM.value == m) {
-			/*for (var i = 1; i < 7; i++) {
-				var li = ul.item(i).getElementsByTagName("li");
-				for (j = 0; j < 7; j++) {
-					if (parseInt(li[j].innerHTML) == d && li[j].style.color != "rgb(153, 153, 153)") {
-						li[j].style.backgroundColor = "";
-						li[j].style.color = "#000";
-						return;
-					}
-				}
-			}*/
 			var li = ul.item(1).getElementsByTagName("li");
 			for (var i = 0; i < li.length; i++) {
 				if (parseInt(li[i].innerHTML) == d && li[i].style.color != "rgb(153, 153, 153)") {
@@ -406,16 +354,6 @@
 
 	function changeLiColorCur(ul, selectY, selectM, y, m, d, color) {
 		if (selectY.value == y && selectM.value == m) {
-			/*for (var i = 1; i < 7; i++) {
-				var li = ul.item(i).getElementsByTagName("li");
-				for (var j = 0; j < 7; j++) {
-					if (parseInt(li[j].innerHTML) == d && li[j].style.color == "rgb(0, 0, 0)") {
-						li[j].style.backgroundColor = color;
-						li[j].style.color = "#fff";
-						break;
-					}
-				}
-			}*/
 			var li = ul.item(1).getElementsByTagName("li");
 			for (var i = 0; i < li.length; i++) {
 				if (parseInt(li[i].innerHTML) == d && li[i].style.color == "rgb(0, 0, 0)") {
