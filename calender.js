@@ -23,6 +23,13 @@
 		"1001 国庆节","1006 老人节","1024 联合国日",
 		"1111 复活节",
 		"1224 平安夜","1225 圣诞节"];
+	var colors = ["#FF6347", "#20B2AA", "#515151", "#008B45"];
+
+	var saveColor = "#008B45";
+	var storage = window.localStorage;
+	if (storage.getItem("calender_color") != null) {
+		saveColor = storage.getItem("calender_color");
+	}
 
 	/* 以下数据来源：
 	 * 参考自：http://www.weather.gov.hk/gts/time/conversionc.htm
@@ -67,7 +74,7 @@
 		var _s_ = this;
 		this.setting = {
 			"width" : "50%", //px || %
-			"color" : "#008B45" //#008B45
+			"color" : saveColor //#008B45
 		}
 		/* this.calHead
 		 * this.calBody
@@ -97,6 +104,9 @@
 		this.cal_body_ldetail_date = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_date")[0];
 		this.cal_body_ldetail_year = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_year")[0];
 		this.cal_body_ldetail_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_solar_term")[0];
+		this.selectColor = getelementsbyclassname(this.calFoot,"sel_point")[0];
+		this.selectColorBlock = getelementsbyclassname(this.calFoot,"select_color")[0];
+		this.selectColorBtn = getelementsbyclassname(this.selectColorBlock, "sel_color_btn");
 
 		this.initialize();
 		this.setBColor();
@@ -107,6 +117,7 @@
 		getelementsbyclassname(this.calHead, "cal_head_m_nbtn")[0].onclick = function() {_s_.switchLNMPage("next");_s_.changePage();};
 		getelementsbyclassname(this.calHead, "cal_head_y_lbtn")[0].onclick = function() {_s_.switchLNYPage("last");_s_.changePage();};
 		getelementsbyclassname(this.calHead, "cal_head_y_nbtn")[0].onclick = function() {_s_.switchLNYPage("next");_s_.changePage();};
+		getelementsbyclassname(this.calHead, "cal_head_b_btn")[0].onclick = function() {_s_.backCurrentDay();_s_.changePage();_s_.selectDay(_s_.select.getDate());};
 		this.selectY.onchange = function() {_s_.changePage();};
 		this.selectM.onchange = function() {_s_.changePage();};
 		var lis = this.ulList.item(1).getElementsByTagName("li");
@@ -117,12 +128,27 @@
 				} 
 			};
 		}
+		this.selectColor.onclick = function() {
+			if (_s_.selectColorBlock.style.display == "none") {
+				_s_.selectColorBlock.style.display = "block";
+			} else {
+				_s_.selectColorBlock.style.display = "none";
+			}
+		}
+		for (i = 0, l = this.selectColorBtn.length; i < l; i++) {
+			this.selectColorBtn[i].onclick = function() {
+				_s_.setting.color = this.style.backgroundColor;
+				_s_.setBColor();
+				_s_.selectColor.onclick();
+			}
+		}
 		window.setInterval(this.autoCountTime(), 1000);
 		this.setVisible(true);
 	};
 
 	/*------------------------------------prototype----------------------------------------------------*/
 	Calender.prototype = {
+		//初始化整个日历表
 		initialize:function() {
 			//样式
 			this._self_.style.width = this.setting.width;
@@ -156,9 +182,11 @@
 			/*--------------cal_foot----------------*/
 			var foot_cur_date = this.calFoot.getElementsByTagName("p")[0];
 			foot_cur_date.innerHTML = "北京时间：" + format(current, "hh:mm:ss");
-			
-
+			for (var i = 0, l = this.selectColorBtn.length; i < l; i++) {
+				this.selectColorBtn[i].style.backgroundColor = colors[i];
+			}
 		},
+		//完成日历表的初始化之后对日历表可视化设置
 		setVisible:function(status) {
 			if (status) {
 				this._self_.style.visibility = "visible";
@@ -166,22 +194,25 @@
 			}
 			this._self_.style.visibility = "hidden";
 		},
+		//根据this.setting.color对主色调进行修改
 		setBColor:function() {
 			var setbcolor = getelementsbyclassname(this._self_, "setBColor");
 			for (var i = 0, l = setbcolor.length; i < l; i++) {
 				setbcolor[i].style.backgroundColor = this.setting.color;
 			}
-
+			changeLiColorCur(this.ulList,this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate(),this.setting.color);
+			window.localStorage.setItem("calender_color", this.setting.color);
 		},
+		//返回更新当前时间信息的函数
 		autoCountTime:function() {
 			var _this_ = this;
 			return function() {
 				var current = new Date();
 				var foot_cur_date = _this_.calFoot.getElementsByTagName("p")[0];
 				foot_cur_date.innerHTML ="北京时间：" + format(current, "hh:mm:ss");
-			}
-			
+			}	
 		},
+		//将当前的年月信息进行向上或者向下的月份级修改
 		switchLNMPage:function(btnStatus) {
 			//上个月或者写个月
 			var year = this.selectY.value,
@@ -204,6 +235,7 @@
 			this.selectY.value = year;
 			this.selectM.value = month + 1;
 		},
+		//将当前的年月信息进行向上或者向下的年份级修改
 		switchLNYPage:function(btnStatus) {
 			//上一年或者下一年
 			var year = this.selectY.value;
@@ -216,6 +248,7 @@
 				this.selectY.value = year;
 			}
 		},
+		//更新当前显示的日历信息，例如switchLNMPage之后进行调用，进而更新信息
 		changePage:function() {
 			//通过select上的数据进行更新
 			var _s_ = this;
@@ -231,8 +264,8 @@
 			}
 			changeLiColor(this.ulList);
 			changeLiColorCur(this.ulList, this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate(),this.setting.color);
-
 		},
+		//参数d为当前选择的日期信息（年和月已经选定），更新主体右侧的详细信息块等
 		selectDay:function(d) {
 			changeLiColorCurOri(this.ulList,this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate());
 			this.select.setYear(this.selectY.value);
@@ -251,6 +284,12 @@
 			this.cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
 			this.cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
 			this.cal_body_ldetail_solar_term.innerHTML = solarTerm(this.select);
+		},
+		//对当前保存的选择数据进行修改
+		backCurrentDay:function() {
+			this.select = new Date();
+			this.selectY.value = this.select.getFullYear();
+			this.selectM.value = this.select.getMonth() + 1;
 		}
 	}
 
@@ -311,7 +350,6 @@
 		}
 		return arr;
 	}
-
 	//添加li
 	function addLi(ul, num) {
 		var li = document.createElement("li");
@@ -322,7 +360,7 @@
 	function changeLi(li, num) {
 		li.innerHTML = num;
 	}
-
+	//根据日期判断，使用字体颜色区分本月以及上下月的数据信息
 	function changeLiColor(ul) {
 		var color = 0, last = 2;
 		var li = ul.item(1).getElementsByTagName("li");
@@ -338,7 +376,7 @@
 			last = parseInt(li[i].innerHTML);
 		}
 	}
-
+	//在点击其他日期前，若当前页面有显示其他的日期信息，要现将其样式清除
 	function changeLiColorCurOri(ul, selectY, selectM, y, m, d) {
 		if (selectY.value == y && selectM.value == m) {
 			var li = ul.item(1).getElementsByTagName("li");
@@ -351,12 +389,12 @@
 			}
 		}
 	}
-
+	//当前为选择信息，改变其样式表示被选中
 	function changeLiColorCur(ul, selectY, selectM, y, m, d, color) {
 		if (selectY.value == y && selectM.value == m) {
 			var li = ul.item(1).getElementsByTagName("li");
 			for (var i = 0; i < li.length; i++) {
-				if (parseInt(li[i].innerHTML) == d && li[i].style.color == "rgb(0, 0, 0)") {
+				if (parseInt(li[i].innerHTML) == d &&(li[i].style.color == "rgb(0, 0, 0)" || li[i].style.color == "rgb(255, 255, 255)")) {
 					li[i].style.backgroundColor = color;
 					li[i].style.color = "#fff";
 					break;
@@ -364,7 +402,7 @@
 			}
 		}
 	}
-
+	//国际节假日信息的判断
 	function nationFestival(d) {
 		var str = "";
 		var month = d.getMonth() + 1,
@@ -382,8 +420,7 @@
 			}
 		}
 		return str;
-	}
-		
+	}	
 	/* 判断当前时间是否有节气
 	 * 节气的计算公式：[Y*D+C]-L
 	 * 其中，Y表示年代数，D=0.2422，L表示闰年数，C取决于气节和月份
@@ -427,12 +464,10 @@
 		}
 		return (sum + lunarRDays(y));
 	}
-
 	//闰月是哪个月份
 	function lunarRMonth(y) {
 		return (calender_data[y-1901] & 0xf);
 	}
-
 	//农历年是否有闰月
 	function lunarRDays(y) {
 		var run = 0;
@@ -447,7 +482,6 @@
 		}
 		return run;
 	}
-
 	//该月是农历哪个月份哪一天，返回文字
 	function lunarMD(year, days) {
 		var obj = {"r": 0};
@@ -477,7 +511,7 @@
 		obj["day"] = days;
 		return obj;
 	}
-
+	//返回详细信息的对象obj（用于保存多个信息）
 	function lunarDate(d) {
 		var obj = {};
 		var base = new Date(1901, 1, 19, 0, 0, 0),
@@ -503,7 +537,7 @@
 		obj["r"] = temp.r;
 		return obj;
 	}
-
+	//将信息以字符串形式打印并且返回
 	function printLunar(obj) {
 		var str = "",
 			days = obj.day;
@@ -523,7 +557,7 @@
 		str += lunar_date_first[Math.floor(days / 10)] + lunar_date_second[days % 10];
 		return str;
 	}
-
+	//干支纪年的计算
 	function lunarYearName(y) {
 		var str = "";
 		str += lunar_tianGan_y[(y - 1864) % 10];
@@ -531,7 +565,6 @@
 		str += lunar_animal[(y - 1900) % 12] + "年]";
 		return str;
 	}
-
 	//提供格式化日期
 	function format(d, str) {
 		var date = {
