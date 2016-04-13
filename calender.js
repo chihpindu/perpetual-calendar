@@ -21,6 +21,7 @@
 		"0801 建军节",
 		"0910 教师节","0928 孔子诞辰",
 		"1001 国庆节","1006 老人节","1024 联合国日",
+		"1111 复活节",
 		"1224 平安夜","1225 圣诞节"];
 
 	/* 以下数据来源：
@@ -55,14 +56,19 @@
  	var lunar_months = ["正","二","三","四","五","六","七","八","九","十","十一","腊"];
  	var lunar_date_first = ["初","十","甘","卅"];
  	var lunar_date_second = ["一","二","三","四","五","六","七","八","九","十"];
- 	var lunar_tianGan = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
- 	var lunar_diZhi = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+ 	var lunar_tianGan_y = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+ 	var lunar_diZhi_y = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+ 	var lunar_dizhi_m = ["寅","卯","辰","巳","午","未","申","酉","戌","亥","子","丑"];
  	var lunar_animal =["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
 	
  	/*------------------------------------calender----------------------------------------------*/
 	var Calender = function(IDName) {
 		this._self_ = document.getElementById(IDName);
 		var _s_ = this;
+		this.setting = {
+			"width" : "50%", //px || %
+			"color" : "#008B45" //#008B45
+		}
 		/* this.calHead
 		 * this.calBody
 		 * this.calFoot
@@ -78,19 +84,21 @@
 				this.calFoot = temp;
 			}
 		}
-		this.ulList = this.calBody.getElementsByTagName("ul");//cal_list
-		this.calDetailNation = getelementsbyclassname(this.calBody, "cal_nation_detail")[0];
-		this.calDetailLunar = getelementsbyclassname(this.calBody, "cal_lunar_detail")[0];
-		this.lastBtn = getelementsbyclassname(this.calHead, "cal_last_mm_btn")[0];
-		this.nextBtn = getelementsbyclassname(this.calHead, "cal_next_mm_btn")[0];
-		this.lastMBtn = getelementsbyclassname(this.calHead, "cal_last_m_btn")[0];
-		this.nextMBtn = getelementsbyclassname(this.calHead, "cal_next_m_btn")[0];
-		this.lastYBtn = getelementsbyclassname(this.calHead, "cal_last_y_btn")[0];
-		this.nextYBtn = getelementsbyclassname(this.calHead, "cal_next_y_btn")[0];
-		this.selectY = document.getElementsByName("cal_sel_year")[0];
-		this.selectM = document.getElementsByName("cal_sel_month")[0];
+		this.ulList = this.calBody.getElementsByTagName("ul");//cal_head_list
+		this.calDetailNation = getelementsbyclassname(this.calBody, "cal_body_n_detail")[0];
+		this.calDetailLunar = getelementsbyclassname(this.calBody, "cal_body_l_detail")[0];
+		this.lastBtn = getelementsbyclassname(this.calHead, "cal_head_lbtn")[0];
+		this.nextBtn = getelementsbyclassname(this.calHead, "cal_head_nbtn")[0];
+		this.lastMBtn = getelementsbyclassname(this.calHead, "cal_head_m_lbtn")[0];
+		this.nextMBtn = getelementsbyclassname(this.calHead, "cal_head_m_nbtn")[0];
+		this.lastYBtn = getelementsbyclassname(this.calHead, "cal_head_y_lbtn")[0];
+		this.nextYBtn = getelementsbyclassname(this.calHead, "cal_head_y_nbtn")[0];
+		this.selectY = document.getElementsByName("cal_head_sel_year")[0];
+		this.selectM = document.getElementsByName("cal_head_sel_month")[0];
+		this.select = new Date();
 		
 		this.initialize();
+		this.setBColor();
 		this.lastBtn.onclick = function() {_s_.switchLNMPage("last");_s_.changePage();};
 		this.nextBtn.onclick = function() {_s_.switchLNMPage("next");_s_.changePage();};
 		this.lastMBtn.onclick = function() {_s_.switchLNMPage("last");_s_.changePage();};
@@ -99,12 +107,24 @@
 		this.nextYBtn.onclick = function() {_s_.switchLNYPage("next");_s_.changePage();};
 		this.selectM.onchange = function() {_s_.changePage();};
 		this.selectY.onchange = function() {_s_.changePage();};
+		var lis = this.ulList.item(1).getElementsByTagName("li");
+		for (i = 0, l = lis.length; i < l; i++) {
+			lis[i].onclick = function() {
+				if (this.style.color != "rgb(153, 153, 153)") {
+					_s_.selectDay(parseInt(this.innerHTML));
+				} 
+			};
+		}
 		window.setInterval(this.autoCountTime(), 1000);
+		this.setVisible(true);
 	};
 
 	/*------------------------------------prototype----------------------------------------------------*/
 	Calender.prototype = {
 		initialize:function() {
+			//样式
+			this._self_.style.width = this.setting.width;
+
 			var current = new Date();
 			/*--------------cal_head----------------*/
 			this.selectY.value = current.getFullYear();
@@ -112,37 +132,56 @@
 
 			/*--------------cal_body----------------*/
 			var dateArr = curArray(new Date());
-			for (var i = 1, count = 0, l = this.ulList.length; i < l; i++) {
+			/*for (var i = 1, count = 0, l = this.ulList.length; i < l; i++) {
 				for (var j = 0; j < 7; j++) {
 					addLi(this.ulList.item(i), dateArr[count]);
 					count++;
 				}
+			}*/
+			for (var count = 0; count < dateArr.length; count++) {
+				addLi(this.ulList.item(1), dateArr[count]);
 			}
+			changeLiColor(this.ulList);
+			changeLiColorCur(this.ulList, this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth() + 1, this.select.getDate(),this.setting.color);
 
-			/*------------ cal_detail----------------*/
+			/*------------ cal_body_detail----------------*/
 			/*----------cal_detail_nation------------*/
-			var cal_detail_date = getelementsbyclassname(this.calDetailNation, "cal_detail_date")[0];
-			var cal_detail_date_day = getelementsbyclassname(this.calDetailNation, "cal_detail_date_day")[0]
-			var cal_detail_weekday = getelementsbyclassname(this.calDetailNation, "cal_weekday")[0];
-			var cal_detail_festival = getelementsbyclassname(this.calDetailNation, "cal_festival")[0];
-			cal_detail_date.innerHTML = format(current, "YYYY年MM月DD日");
-			cal_detail_date_day.innerHTML = current.getDate();
-			cal_detail_weekday.innerHTML = week_day[current.getDay()];
+			var cal_body_ndetail_date = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_date")[0];
+			var cal_body_ndetail_day_p = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_day_p")[0]
+			var cal_body_ndetail_weekday = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_weekday")[0];
+			var cal_detail_festival = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_festival")[0];
+			cal_body_ndetail_date.innerHTML = format(current, "YYYY年MM月DD日");
+			cal_body_ndetail_day_p.innerHTML = current.getDate();
+			cal_body_ndetail_weekday.innerHTML = week_day[current.getDay()];
 			cal_detail_festival.innerHTML = nationFestival(current);
 
 			/*----------cal_detail_lunar------------*/
-			/*var cal_lunar_date = getelementsbyclassname(this.calDetailLunar, "cal_lunar_date")[0];
+			var cal_body_ldetail_date = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_date")[0];
 			var lunarInfo = lunarDate(new Date());
-			cal_lunar_date.innerHTML = "农历" + printLunar(lunarInfo);
-			var cal_lunar_year = getelementsbyclassname(this.calDetailLunar, "cal_lunar_year")[0];
-			cal_lunar_year.innerHTML = lunarYearName(lunarInfo.year);*/
-			var cal_lunar_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_lunar_solar_term")[0];
-			cal_lunar_solar_term.innerHTML = solarTerm(new Date());
+			cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
+			var cal_body_ldetail_year = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_year")[0];
+			cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
+			var cal_body_ldetail_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_solar_term")[0];
+			cal_body_ldetail_solar_term.innerHTML = solarTerm(new Date());
 
 			/*--------------cal_foot----------------*/
 			var foot_cur_date = this.calFoot.getElementsByTagName("p")[0];
 			foot_cur_date.innerHTML = "北京时间：" + format(current, "hh:mm:ss");
 			
+
+		},
+		setVisible:function(status) {
+			if (status) {
+				this._self_.style.visibility = "visible";
+				return;
+			}
+			this._self_.style.visibility = "hidden";
+		},
+		setBColor:function() {
+			var setbcolor = getelementsbyclassname(this._self_, "setBColor");
+			for (var i = 0, l = setbcolor.length; i < l; i++) {
+				setbcolor[i].style.backgroundColor = this.setting.color;
+			}
 
 		},
 		autoCountTime:function() {
@@ -185,7 +224,7 @@
 				year++;
 			}
 			if (year > 1900 && year <= 2100) {
-				this.selectM.value = year;
+				this.selectY.value = year;
 			}
 		},
 		changePage:function() {
@@ -197,14 +236,48 @@
 
 			/*--------------cal_body----------------*/
 			var dateArr = curArray(new Date(head_cur_date_year,head_cur_date_month-1,1));
-			var li;
+			/*var li;
 			for (var i = 1, count = 0, l = this.ulList.length; i < l; i++) {
 				li = this.ulList.item(i).getElementsByTagName("li");
 				for (var j = 0; j < 7; j++) {
 					changeLi(li[j], dateArr[count]);
 					count++;
 				}
+			}*/
+			var li = this.ulList.item(1).getElementsByTagName("li");
+			for (var count = 0; count < dateArr.length; count++) {
+				changeLi(li[count], dateArr[count]);
 			}
+			changeLiColor(this.ulList);
+			changeLiColorCur(this.ulList, this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate(),this.setting.color);
+
+		},
+		selectDay:function(d) {
+			changeLiColorCurOri(this.ulList,this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate());
+			this.select.setYear(this.selectY.value);
+			this.select.setMonth(this.selectM.value - 1);
+			this.select.setDate(d);
+			changeLiColorCur(this.ulList,this.selectY, this.selectM, this.select.getFullYear(), this.select.getMonth()+1, this.select.getDate(),this.setting.color);
+			/*------------ cal_detail----------------*/
+			/*----------cal_detail_nation------------*/
+			var cal_body_ndetail_date = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_date")[0];
+			var cal_body_ndetail_day_p = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_day_p")[0]
+			var cal_body_ndetail_weekday = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_weekday")[0];
+			var cal_detail_festival = getelementsbyclassname(this.calDetailNation, "cal_body_ndetail_festival")[0];
+			cal_body_ndetail_date.innerHTML = format(this.select, "YYYY年MM月DD日");
+			cal_body_ndetail_day_p.innerHTML = this.select.getDate();
+			cal_body_ndetail_weekday.innerHTML = week_day[this.select.getDay()];
+			cal_detail_festival.innerHTML = nationFestival(this.select);
+
+			/*----------cal_detail_lunar------------*/
+			var cal_body_ldetail_date = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_date")[0];
+			var lunarInfo = lunarDate(new Date(this.select.getFullYear(),this.select.getMonth(),this.select.getDate()));
+			cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
+			var cal_body_ldetail_year = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_year")[0];
+			cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
+			var cal_body_ldetail_solar_term = getelementsbyclassname(this.calDetailLunar, "cal_body_ldetail_solar_term")[0];
+			cal_body_ldetail_solar_term.innerHTML = solarTerm(this.select);
+
 		}
 	}
 
@@ -275,6 +348,83 @@
 	//修改li
 	function changeLi(li, num) {
 		li.innerHTML = num;
+	}
+
+	function changeLiColor(ul) {
+		/*var color = 0, last = 2;
+		for (i = 1; i < 7; i++) {
+			var li = ul.item(i).getElementsByTagName("li");
+			for (j = 0; j < 7; j++) {
+				if (parseInt(li[j].innerHTML) < last) color = !color; 
+				if (!color) {
+					li[j].style.backgroundColor = "";
+					li[j].style.color = "#999";
+				} else {
+					li[j].style.backgroundColor = "";
+					li[j].style.color = "#000";
+				}
+				last = parseInt(li[j].innerHTML);
+			}
+		}*/
+		var color = 0, last = 2;
+		var li = ul.item(1).getElementsByTagName("li");
+		for (var i = 0; i < li.length; i++) {
+			if (parseInt(li[i].innerHTML) < last) color = !color; 
+			if (!color) {
+				li[i].style.backgroundColor = "";
+				li[i].style.color = "#999";
+			} else {
+				li[i].style.backgroundColor = "";
+				li[i].style.color = "#000";
+			}
+			last = parseInt(li[i].innerHTML);
+		}
+	}
+
+	function changeLiColorCurOri(ul, selectY, selectM, y, m, d) {
+		if (selectY.value == y && selectM.value == m) {
+			/*for (var i = 1; i < 7; i++) {
+				var li = ul.item(i).getElementsByTagName("li");
+				for (j = 0; j < 7; j++) {
+					if (parseInt(li[j].innerHTML) == d && li[j].style.color != "rgb(153, 153, 153)") {
+						li[j].style.backgroundColor = "";
+						li[j].style.color = "#000";
+						return;
+					}
+				}
+			}*/
+			var li = ul.item(1).getElementsByTagName("li");
+			for (var i = 0; i < li.length; i++) {
+				if (parseInt(li[i].innerHTML) == d && li[i].style.color != "rgb(153, 153, 153)") {
+					li[i].style.backgroundColor = "";
+					li[i].style.color = "#000";
+					return;
+				}
+			}
+		}
+	}
+
+	function changeLiColorCur(ul, selectY, selectM, y, m, d, color) {
+		if (selectY.value == y && selectM.value == m) {
+			/*for (var i = 1; i < 7; i++) {
+				var li = ul.item(i).getElementsByTagName("li");
+				for (var j = 0; j < 7; j++) {
+					if (parseInt(li[j].innerHTML) == d && li[j].style.color == "rgb(0, 0, 0)") {
+						li[j].style.backgroundColor = color;
+						li[j].style.color = "#fff";
+						break;
+					}
+				}
+			}*/
+			var li = ul.item(1).getElementsByTagName("li");
+			for (var i = 0; i < li.length; i++) {
+				if (parseInt(li[i].innerHTML) == d && li[i].style.color == "rgb(0, 0, 0)") {
+					li[i].style.backgroundColor = color;
+					li[i].style.color = "#fff";
+					break;
+				}
+			}
+		}
 	}
 
 	function nationFestival(d) {
@@ -381,7 +531,7 @@
 				if (countDays > days) {
 					obj["month"] = count;
 					obj["r"] = 1;
-					days = days - lunar_r_days;
+					days = days - (countDays - lunar_r_days);
 					break;
 				}
 			}
@@ -438,8 +588,8 @@
 
 	function lunarYearName(y) {
 		var str = "";
-		str += lunar_tianGan[(y - 1864) % 10];
-		str += lunar_diZhi[(y - 1864) % 12] + "年 [";
+		str += lunar_tianGan_y[(y - 1864) % 10];
+		str += lunar_diZhi_y[(y - 1864) % 12] + "年 [";
 		str += lunar_animal[(y - 1900) % 12] + "年]";
 		return str;
 	}

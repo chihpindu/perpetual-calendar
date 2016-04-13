@@ -8,36 +8,40 @@
 </head>
 <body>
 
-	<div id="calender">
-		<div class = "cal_head setBColor setWidth">
-			<button class="cal_last_mm_btn setFColor">&lt;</button>
-			<button class="cal_next_mm_btn setFColor">&gt;</button>
-			<div class="cal_current_date setFColor">
-				<div class="cal_current_date_year">
-					<button class="cal_last_y_btn">&lt;</button>
-					<select name="cal_sel_year">
+	<div id="calender" class="setWidth">
+		<!--head-->
+		<div class = "cal_head setBColor">
+			<button class="cal_head_lbtn setFColor">&lt;</button>
+			<button class="cal_head_nbtn setFColor">&gt;</button>
+			<div class="cal_head_date setFColor">
+				<div class="cal_head_date_year">
+					<button class="cal_head_y_lbtn">&lt;</button>
+					<select name="cal_head_sel_year">
 						<script>
 						for (var i = 1901; i <= 2100; i++) document.write("<option value='" + i + "'>" + i);
 						</script>
 					</select>
-					<button class="cal_next_y_btn">&gt;</button>
+					<button class="cal_head_y_nbtn">&gt;</button>
 				</div>
 				<span>年</span>
-				<div class="cal_current_date_month">
-					<button class="cal_last_m_btn">&lt;</button>
-					<select name="cal_sel_month">
+				<div class="cal_head_date_month">
+					<button class="cal_head_m_lbtn">&lt;</button>
+					<select name="cal_head_sel_month">
 						<script>
 						for (var i = 1; i <= 12; i++) document.write("<option value='" + i + "'>" + i);
 						</script>
 					</select>
-					<button class="cal_next_m_btn">&gt;</button>
+					<button class="cal_head_m_nbtn">&gt;</button>
 				</div>
 				<span>月</span>
 			</div>
 		</div>
-		<div class="cal_body setWidth">
-			<div class="cal_list">
-				<ul class="cal_weekday">
+		<!--head end-->
+		<!--body-->
+		<div class="cal_body">
+			<!--left-->
+			<div class="cal_body_list">
+				<ul class="cal_body_weekday">
 					<li>一</li>
 					<li>二</li>
 					<li>三</li>
@@ -46,34 +50,38 @@
 					<li>六</li>
 					<li>日</li>
 				</ul>
-				<ul class="cal_line"></ul>
-				<ul class="cal_line"></ul>
-				<ul class="cal_line"></ul>
-				<ul class="cal_line"></ul>
-				<ul class="cal_line"></ul>
-				<ul class="cal_line"></ul>
+				<ul class="cal_body_line"></ul>
+				<!--<ul class="cal_body_line"></ul>
+				<ul class="cal_body_line"></ul>
+				<ul class="cal_body_line"></ul>
+				<ul class="cal_body_line"></ul>
+				<ul class="cal_body_line"></ul>-->
 			</div>
-			<div class="cal_detail">
-				<div class="cal_nation_detail">
-					<p class="cal_detail_date"></p>
-					<div class="cal_day setBColor">
-						<p class="cal_detail_date_day setFColor"></p>
+			<!--left end-->
+			<!--right-->
+			<div class="cal_body_detail">
+				<div class="cal_body_n_detail">
+					<p class="cal_body_ndetail_date"></p>
+					<div class="cal_body_ndetail_day setBColor">
+						<p class="cal_body_ndetail_day_p setFColor"></p>
 					</div>
-					<p class="cal_weekday"></p>
-					<p class="cal_festival"></p>
+					<p class="cal_body_ndetail_weekday"></p>
+					<p class="cal_body_ndetail_festival"></p>
 				</div>
-				<div class="cal_lunar_detail">
-					<!--<p class="cal_lunar_date">农历三月初九</p>-->
-					<p class="cal_lunar_solar_term"></p>
-					<!--<p class="cal_lunar_year">年 [年]</p>
-					<p>壬辰月 丁卯日</p>-->
+				<div class="cal_body_l_detail">
+					<p class="cal_body_ldetail_date"></p>
+					<p class="cal_body_ldetail_solar_term"></p>
+					<p class="cal_body_ldetail_year"></p>
 				</div>
 			</div>
-			
+			<!--right end-->
 		</div>
-		<div class="cal_foot setWidth setBColor setFColor">
-			<p></p>
+		<!--body end-->
+		<!--foot-->
+		<div class="cal_foot setBColor">
+			<p class="setFColor"></p>
 		</div>
+		<!--foot end-->
 	</div>
 	<script>
 	var calender = new Calender("calender");
