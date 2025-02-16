@@ -11,18 +11,16 @@
 		5.4055,20.12,3.87,18.73,5.63,20.646,4.81,20.1,5.52,21.04,5.678,21.37,
 		7.108,22.83,7.5,23.13,7.646,23.042,8.318,23.438,7.438,22.36,7.18,21.94];
 	var nation_festivals = [
-		"0101 元旦",
-		"0214 情人節",
-		"0308 婦女節","0312 植树节","0315 消费者权益日",
-		"0401 愚人节",
-		"0501 劳动节","0504 青年节","0512 护士节",
-		"0601 儿童节",
-		"0701 建党节",
-		"0801 建军节",
-		"0910 教师节","0928 孔子诞辰",
-		"1010 國慶日",
-		"1111 复活节",
-		"1224 平安夜","1225 圣诞节"];
+		"0101 中華民國開國紀念日",
+		"0214 情人節","0228 和平紀念日",
+		"0308 婦女節","0312 國父逝世紀念日","0329 青年節",
+		"0404 兒童節",
+		"0501 勞動節",
+		"0808 父親節",
+		"0903 軍人節","0928 教師節",
+		"1010 國慶日","1025 光復節",
+		"1112 國父誕辰紀念日",
+		"1225 行憲紀念日"];
 	var colors = ["#FF6347", "#20B2AA", "#515151", "#008B45"];
 
 	var saveColor = "#008B45";
@@ -60,13 +58,13 @@
 		 0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,0x0b273,
 		 0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,0x0e968,
 		 0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,0x0d520];//2091-2100
- 	var lunar_months = ["正","二","三","四","五","六","七","八","九","十","十一","腊"];
- 	var lunar_date_first = ["初","十","甘","卅"];
+ 	var lunar_months = ["正","二","三","四","五","六","七","八","九","十","十一","十二"];
+ 	var lunar_date_first = ["初","十","廿","卅"];
  	var lunar_date_second = ["一","二","三","四","五","六","七","八","九","十"];
  	var lunar_tianGan_y = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
  	var lunar_diZhi_y = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
  	var lunar_dizhi_m = ["寅","卯","辰","巳","午","未","申","酉","戌","亥","子","丑"];
- 	var lunar_animal =["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
+ 	var lunar_animal =["鼠","牛","虎","兔","龍","蛇","馬","羊","猴","雞","狗","豬"];
 	
  	/*------------------------------------calender----------------------------------------------*/
 	var Calender = function(IDName) {
@@ -175,13 +173,13 @@
 
 			/*----------cal_detail_lunar------------*/
 			var lunarInfo = lunarDate(new Date());
-			this.cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
+			this.cal_body_ldetail_date.innerHTML = "農曆" + printLunar(lunarInfo);
 			this.cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
 			this.cal_body_ldetail_solar_term.innerHTML = solarTerm(new Date());
 
 			/*--------------cal_foot----------------*/
 			var foot_cur_date = this.calFoot.getElementsByTagName("p")[0];
-			foot_cur_date.innerHTML = "北京时间：" + format(current, "hh:mm:ss");
+			foot_cur_date.innerHTML = "現在時間：" + format(current, "hh:mm:ss");
 			for (var i = 0, l = this.selectColorBtn.length; i < l; i++) {
 				this.selectColorBtn[i].style.backgroundColor = colors[i];
 			}
@@ -209,7 +207,7 @@
 			return function() {
 				var current = new Date();
 				var foot_cur_date = _this_.calFoot.getElementsByTagName("p")[0];
-				foot_cur_date.innerHTML ="北京时间：" + format(current, "hh:mm:ss");
+				foot_cur_date.innerHTML ="現在時間：" + format(current, "hh:mm:ss");
 			}	
 		},
 		//将当前的年月信息进行向上或者向下的月份级修改
@@ -281,7 +279,7 @@
 
 			/*----------cal_detail_lunar------------*/
 			var lunarInfo = lunarDate(new Date(this.select.getFullYear(),this.select.getMonth(),this.select.getDate()));
-			this.cal_body_ldetail_date.innerHTML = "农历" + printLunar(lunarInfo);
+			this.cal_body_ldetail_date.innerHTML = "農曆" + printLunar(lunarInfo);
 			this.cal_body_ldetail_year.innerHTML = lunarYearName(lunarInfo.year);
 			this.cal_body_ldetail_solar_term.innerHTML = solarTerm(this.select);
 		},
